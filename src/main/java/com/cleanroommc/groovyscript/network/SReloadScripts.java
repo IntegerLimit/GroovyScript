@@ -51,13 +51,15 @@ public class SReloadScripts implements IPacket {
         if (this.changePackmode && this.packmode != null) {
             updatePackmode(Minecraft.getMinecraft().player, this.packmode);
         }
+
+        long time = GroovyScript.runGroovyScriptsInLoader(LoadStage.POST_INIT);
         if (this.reloadJei) {
             ReloadableRegistryManager.reloadJei(!this.changePackmode);
             if (this.changePackmode) {
                 Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Finished updating packmode and JEI. Enjoy :)"));
             }
         }
-        GroovyScript.postScriptRunResult(Minecraft.getMinecraft().player, true, true, true, 0);
+        GroovyScript.postScriptRunResult(Minecraft.getMinecraft().player, true, true, true, time);
         MinecraftForge.EVENT_BUS.post(new Packmode.ChangeEvent(Packmode.getPackmode()));
         return null;
     }
